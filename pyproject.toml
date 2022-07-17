@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "pyohio-2022"
+version = "2022.7.16"
+description = ""
+authors = ["Olmo Maldonado <me@ibolmo.com>"]
+license = "MIT"
+packages = [
+    { include = "books" },
+    { include = "openapi" },
+]
+
+[tool.poetry.scripts]
+generate-openapi = "openapi:generate"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.79.0"
+uvicorn = "^0.18.2"
+PyYAML = "^6.0"
+toml = "^0.10.2"
+
+[tool.poetry.dev-dependencies]
+requests = "^2.28.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

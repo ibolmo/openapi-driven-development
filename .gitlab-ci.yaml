@@ -1,0 +1,24 @@
+image: zapier/python-node:2021.12.10
+
+stages:
+  - test
+
+.test:
+  stage: test
+
+.openapi-base:
+    before_script:
+        - poetry config virtualenvs.in-project true
+        - poetry install
+        - npm install
+    extends: .test
+
+lint:openapi:
+    extends: .openapi-base
+    script:
+        - ./backend/bin/openapi test compatibility
+
+lint:openapi:checksum:
+    extends: .openapi-base
+    script:
+        - ./backend/bin/openapi test checksum version

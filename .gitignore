@@ -1,0 +1,33 @@
+# Environments
+bootstrap.log
+.env
+*.DS_Store
+
+# Python
+__pycache__/
+
+# Poetry
+.venv*/
+setup.py
+*.egg-info
+
+# Tests
+junit.xml
+.coverage
+htmlcov/
+.cache/
+
+# Logs
+*.log
+*.logs
+
+# VSCode
+*.code-workspace
+.vscode
+
+# PyCharm
+.idea
+
+# OpenAPI related
+backend/openapi/previous.*
+node_modules

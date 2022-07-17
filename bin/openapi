@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+SRC_DIR="."
+MAIN_BRANCH="origin/main"
+
+OPENAPI_SCHEMA="$(pwd)/$SRC_DIR/openapi/schema.yaml"
+OPENAPI_PREVIOUS_SCHEMA="$(pwd)/$SRC_DIR/openapi/previous.schema.yaml"
+
+OPENAPI_CHECKSUM="$(pwd)/$SRC_DIR/openapi/checksum"
+OPENAPI_PREVIOUS_CHECKSUM="$(pwd)/$SRC_DIR/openapi/previous.checksum"
+
+_get_version() {
+    echo "$(cat $1 | sed -n "s/version: *['\"]*\([\d.]*\)['\"]*/\1/p" | awk 'NR==1{print $1}')"
+}
+
+_get_previous() {
+    git fetch origin
+    PREVIOUS_SCHEMA=$(git show $MAIN_BRANCH:$SRC_DIR/openapi/schema.yaml || echo '')
+    PREVIOUS_CHECKSUM=$(git show $MAIN_BRANCH:$SRC_DIR/openapi/checksum || echo '')
+
+    [ ! -z "$PREVIOUS_SCHEMA" ] && echo $PREVIOUS_SCHEMA > $OPENAPI_SCHEMA
+    [ ! -z "$PREVIOUS_CHECKSUM" ] && echo $PREVIOUS_CHECKSUM > $OPENAPI_PREVIOUS_CHECKSUM
+}
+
+_generate() {
+    (cd "$SRC_DIR" && poetry run generate-openapi $OPENAPI_SCHEMA)
+    echo 'OpenAPI schema updated'
+}
+
+update() {
+    (cd "$SRC_DIR" && poetry version $(date +"%Y.%-m.%-d"))
+
+    _generate
+
+    ## Update the checksum
+	CURRENT=$(bin/checksum $OPENAPI_SCHEMA)
+	echo $CURRENT > $OPENAPI_CHECKSUM
+}
+
+_prepend() { while read line; do printf '%s%s\n' "$1" "$line"; done; }
+
+packages() {
+    VERSION=$(_get_version $OPENAPI_SCHEMA)
+
+    if [ -z "$@" ]; then
+        echo 'Must provide one or more of: setup, update, or publish'
+        exit 1
+    fi
+
+    for PACKAGE in packages/*/ ; do
+        pushd $PACKAGE > /dev/null
+        for COMMAND in "$@"; do
+            echo "Running: '$COMMAND' in '$(basename $PACKAGE)'"
+            echo ''
+            OPENAPI_SCHEMA=$OPENAPI_SCHEMA VERSION=$VERSION npm run $COMMAND | _prepend "  "
+            echo ''
+        done
+        popd > /dev/null
+    done
+}
+
+test() {
+	_get_previous
+	_generate
+
+    SUITE=$([ ! -z "$*" ] && echo "$*" || echo 'all')
+
+    if [[ "$SUITE" =~ (compatibility|all) ]]; then
+        npx openapi-diff $OPENAPI_PREVIOUS_SCHEMA $OPENAPI_SCHEMA
+    fi
+
+    if [[ "$SUITE" =~ (checksum|all) ]]; then
+        CURRENT=$(bin/checksum $OPENAPI_SCHEMA)
+        PREVIOUS=$(cat $OPENAPI_CHECKSUM)
+
+        if [ "$CURRENT" != "$PREVIOUS" ]; then
+            echo "Invalid openapi/checksum ($CURRENT != $PREVIOUS)"
+            echo 'Run `packages` to update artifacts and checksum'
+            exit 1
+        else
+            echo 'OpenAPI checksum is good!'
+        fi
+    fi
+
+    if [[ "$SUITE" =~ (version|all) ]]; then
+        VERSION=$(_get_version $OPENAPI_SCHEMA)
+        PREVIOUS_VERSION=$(_get_version $OPENAPI_PREVIOUS_SCHEMA)
+
+        CURRENT_CHECKSUM=$(cat $OPENAPI_CHECKSUM)
+        PREVIOUS_CHECKSUM=$(cat $OPENAPI_PREVIOUS_CHECKSUM)
+
+        if [ "$VERSION" == "$PREVIOUS_VERSION" ] && [ "$CURRENT_CHECKSUM" != "$PREVIOUS_CHECKSUM" ]; then
+            echo "Detected updated schema.yaml without a corresponding version change."
+            echo "You can resolve this by updating pyproject.toml (currently set to version='$VERSION')."
+            exit 1
+        else
+            echo 'OpenAPI version is good!'
+        fi
+    fi
+}
+
+if declare -f "$1" > /dev/null
+then
+  "$@"
+else
+  echo "Unknown command: '$1'. Try: update and test" >&2
+  exit 1
+fi

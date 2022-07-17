@@ -1,0 +1,97 @@
+components:
+  schemas:
+    Author:
+      properties:
+        name:
+          title: Name
+          type: string
+      required:
+      - name
+      title: Author
+      type: object
+    Body_create_book_api_v1_books_post:
+      properties:
+        book:
+          $ref: '#/components/schemas/Book'
+      required:
+      - book
+      title: Body_create_book_api_v1_books_post
+      type: object
+    Book:
+      properties:
+        author:
+          $ref: '#/components/schemas/Author'
+        title:
+          title: Title
+          type: string
+      required:
+      - author
+      - title
+      title: Book
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+info:
+  title: FastAPI
+  version: 2022.7.16
+openapi: 3.0.2
+paths:
+  /api/v1/books:
+    get:
+      operationId: get_books_api_v1_books_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: Get Books
+    post:
+      operationId: create_book_api_v1_books_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_create_book_api_v1_books_post'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Book

@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "books-pydantic"
+version = "2022.7.16"
+description = "Generated Pydantic models from OpenAPI spec."
+authors = ["Olmo Maldonado <me@ibolmo.com>"]
+include = [
+    "books_pydantic/**/*.py",
+    "books_pydantic/*.py",
+    "books_pydantic/openapi.json"
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pydantic = "^1.8.1"
+
+[tool.poetry.dev-dependencies]
+datamodel-code-generator = "^0.9.2"
+MarkupSafe = "2.0.1"
+black = "21.12b0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
