@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "books-pydantic"
-version = "2022.7.16"
+version = "2022.7.17"
 description = "Generated Pydantic models from OpenAPI spec."
 authors = ["Olmo Maldonado <me@ibolmo.com>"]
 include = [

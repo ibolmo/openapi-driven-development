@@ -1,12 +1,12 @@
 {
   "name": "books_pydantic",
-  "version": "2022.7.16",
+  "version": "2022.7.17",
   "private": true,
   "scripts": {
     "update:version": "npm version --allow-same-version $VERSION && poetry version $VERSION",
     "update:dist": "poetry build",
     "update:pydantic": "poetry run datamodel-codegen --disable-timestamp --input $OPENAPI_SCHEMA --input-file-type openapi --output __init__.py",
-    "update:schema": "npx js-yaml $OPENAPI_SCHEMA > books_pydantic/openapi.json",
+    "update:schema": "npx js-yaml $OPENAPI_SCHEMA > openapi.json",
     "update": "npm run setup && npm run update:version && npm run update:pydantic && npm run update:schema && npm run update:dist",
     "setup": "poetry config virtualenvs.in-project true; poetry install",
     "publish:pypi": "echo 'poetry publish --repository ${REPO} -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}'",
