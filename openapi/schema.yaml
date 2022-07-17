@@ -61,7 +61,7 @@ components:
       type: object
 info:
   title: FastAPI
-  version: 2022.7.16
+  version: 2022.7.17
 openapi: 3.0.2
 paths:
   /api/v1/books:
@@ -71,7 +71,11 @@ paths:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                items:
+                  $ref: '#/components/schemas/Book'
+                title: Response 200 Get Books Api V1 Books Get
+                type: array
           description: Successful Response
       summary: Get Books
     post:
@@ -88,6 +92,12 @@ paths:
             application/json:
               schema: {}
           description: Successful Response
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: Created
         '422':
           content:
             application/json:

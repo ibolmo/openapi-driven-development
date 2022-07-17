@@ -15,11 +15,8 @@ _get_version() {
 
 _get_previous() {
     git fetch origin
-    PREVIOUS_SCHEMA=$(git show $MAIN_BRANCH:$SRC_DIR/openapi/schema.yaml || echo '')
-    PREVIOUS_CHECKSUM=$(git show $MAIN_BRANCH:$SRC_DIR/openapi/checksum || echo '')
-
-    [ ! -z "$PREVIOUS_SCHEMA" ] && echo $PREVIOUS_SCHEMA > $OPENAPI_SCHEMA
-    [ ! -z "$PREVIOUS_CHECKSUM" ] && echo $PREVIOUS_CHECKSUM > $OPENAPI_PREVIOUS_CHECKSUM
+    (git show $MAIN_BRANCH:$SRC_DIR/openapi/schema.yaml || echo '') > $OPENAPI_PREVIOUS_SCHEMA
+    (git show $MAIN_BRANCH:$SRC_DIR/openapi/checksum || echo '') > $OPENAPI_PREVIOUS_CHECKSUM
 }
 
 _generate() {
@@ -66,7 +63,7 @@ test() {
     SUITE=$([ ! -z "$*" ] && echo "$*" || echo 'all')
 
     if [[ "$SUITE" =~ (compatibility|all) ]]; then
-        npx openapi-diff $OPENAPI_PREVIOUS_SCHEMA $OPENAPI_SCHEMA
+        docker run --rm -t -v "$(pwd)"/openapi:/specs:ro openapitools/openapi-diff:latest /specs/previous.schema.yaml /specs/schema.yaml
     fi
 
     if [[ "$SUITE" =~ (checksum|all) ]]; then

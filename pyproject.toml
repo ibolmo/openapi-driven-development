@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyohio-2022"
-version = "2022.7.16"
+version = "2022.7.17"
 description = ""
 authors = ["Olmo Maldonado <me@ibolmo.com>"]
 license = "MIT"
