@@ -16,9 +16,9 @@ stages:
 lint:openapi:
     extends: .openapi-base
     script:
-        - ./backend/bin/openapi test compatibility
+        - ./bin/openapi test compatibility
 
 lint:openapi:checksum:
     extends: .openapi-base
     script:
-        - ./backend/bin/openapi test checksum version
+        - ./bin/openapi test checksum version

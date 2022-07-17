@@ -29,5 +29,5 @@ htmlcov/
 .idea
 
 # OpenAPI related
-backend/openapi/previous.*
+openapi/previous.*
 node_modules

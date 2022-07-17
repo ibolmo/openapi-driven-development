@@ -3,11 +3,11 @@ POETRY := poetry
 .PHONY: install
 install: $(BACKEND_INSTALL_FLAG) ## Install project requirements
 
-$(BACKEND_INSTALL_FLAG): backend/poetry.lock
+$(BACKEND_INSTALL_FLAG): poetry.lock
 	$(POETRY) install
 	@ touch $@
 
-backend/poetry.lock: backend/pyproject.toml
+poetry.lock: pyproject.toml
 	$(POETRY) lock --no-update
 	@ touch $@
 
@@ -16,8 +16,8 @@ runserver: install  ## Run server
 	$(POETRY) run uvicorn books.app:app --reload
 
 .PHONY: openapi
-openapi: ## Update schema and packages
-	@ npx nodemon --watch books -e py --exec "bin/openapi update & bin/openapi packages update"
+openapi: ## Update schema
+	@ npx nodemon --watch books -e py --exec "bin/openapi update"
 
 .PHONY: help
 help:
