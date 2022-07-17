@@ -74,7 +74,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/Book'
-                title: Response 200 Get Books Api V1 Books Get
+                title: Response Get Books Api V1 Books Get
                 type: array
           description: Successful Response
       summary: Get Books
@@ -87,17 +87,12 @@ paths:
               $ref: '#/components/schemas/Body_create_book_api_v1_books_post'
         required: true
       responses:
-        '200':
-          content:
-            application/json:
-              schema: {}
-          description: Successful Response
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Book'
-          description: Created
+          description: Successful Response
         '422':
           content:
             application/json:

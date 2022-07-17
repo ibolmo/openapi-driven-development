@@ -17,6 +17,7 @@ lint:openapi:
     extends: .openapi-base
     script:
         - ./bin/openapi test compatibility
+    allow_failure: true
 
 lint:openapi:checksum:
     extends: .openapi-base

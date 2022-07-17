@@ -19,16 +19,12 @@ class Book(BaseModel):
 olmo = Author(name='Olmo Maldonado')
 books = [Book(author=olmo, title="Where the red fern grows.")]
 
-@app.get("/api/v1/books", responses={
-    status.HTTP_200_OK: {'model': List[Book]},
-})
+@app.get("/api/v1/books", response_model=List[Book])
 async def get_books():
     return books
 
 
-@app.post("/api/v1/books", responses={
-    status.HTTP_201_CREATED: {'model': Book},
-})
+@app.post("/api/v1/books", response_model=Book, status_code=status.HTTP_201_CREATED)
 async def create_book(book: Book = Body(embed=True)):
     books.append(book)
     return book
