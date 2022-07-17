@@ -1,5 +1,5 @@
 
 books_pydantic/*
-!books_pydantic/openapi.py
+!books_pydantic/__init__.py
 
 poetry.lock

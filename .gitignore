@@ -31,3 +31,28 @@ htmlcov/
 # OpenAPI related
 openapi/previous.*
 node_modules
+
+# Build artifacts
+build/
+dist/
+out/
+.DS_Store
+*.DS_STORE
+*.DS_Store
+*.pid
+*~
+*.rdb
+.project
+.pydevproject
+.vagrant
+.floo*
+.sublime-project
+FLOOBITS_README.md
+nosetests.xml
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+yarn-error.log
+lib/python
+lib/.flag-*
