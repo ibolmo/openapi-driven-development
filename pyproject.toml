@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pyohio-2022"
+name = "openapi-driven-development"
 version = "2022.7.17"
 description = ""
 authors = ["Olmo Maldonado <me@ibolmo.com>"]
