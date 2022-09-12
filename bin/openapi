@@ -63,7 +63,7 @@ test() {
     SUITE=$([ ! -z "$*" ] && echo "$*" || echo 'all')
 
     if [[ "$SUITE" =~ (compatibility|all) ]]; then
-        docker run --rm -t -v "$(pwd)"/openapi:/specs:ro openapitools/openapi-diff:latest /specs/previous.schema.yaml /specs/schema.yaml
+        docker run --rm -t -v "$(pwd)"/openapi:/specs:ro tufin/oasdiff -breaking-only -exclude-description -exclude-examples -format text -base /specs/previous.schema.yaml -revision /specs/schema.yaml
     fi
 
     if [[ "$SUITE" =~ (checksum|all) ]]; then
