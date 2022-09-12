@@ -5,7 +5,7 @@ import toml
 import yaml
 from fastapi import Body, FastAPI, status
 from fastapi.responses import Response
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 
 app = FastAPI(version=toml.load('pyproject.toml')['tool']['poetry']['version'])
 
@@ -14,7 +14,7 @@ class Author(BaseModel):
 
 class Book(BaseModel):
     author: Author
-    title: str
+    title: constr(max_length=100)
 
 olmo = Author(name='Olmo Maldonado')
 books = [Book(author=olmo, title="Where the red fern grows.")]
