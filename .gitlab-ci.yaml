@@ -13,7 +13,7 @@ stages:
         - npm install
     extends: .test
 
-lint:openapi:
+lint:openapi:compat:
     extends: .openapi-base
     script:
         - ./bin/openapi test compatibility
